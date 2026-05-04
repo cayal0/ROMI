@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lo siento...</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    background: linear-gradient(135deg,#87CEEB,#ffffff);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+}
+
+/* LOGIN */
+.login{
+    position:absolute;
+    z-index:20;
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    text-align:center;
+    width:90%;
+    max-width:320px;
+}
+
+.login input{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border-radius:10px;
+    border:1px solid #ccc;
+}
+
+.login button{
+    width:100%;
+}
+
+#error{
+    color:red;
+    margin-top:8px;
+}
+
+/* OCULTO HASTA LOGIN */
+#contenido{
+    display:none;
+}
+
+/* NUBES */
+.cloud{
+    position:absolute;
+    background:white;
+    border-radius:50px;
+    opacity:0.8;
+    animation:float 25s infinite linear;
+}
+
+.cloud1{ width:120px;height:60px;top:10%;left:-150px;}
+.cloud2{ width:100px;height:50px;top:30%;left:-200px;animation-delay:5s;}
+
+@keyframes float{
+    from{transform:translateX(0);}
+    to{transform:translateX(120vw);}
+}
+
+/* CONTENEDOR */
+.container{
+    background:white;
+    width:90%;
+    max-width:420px;
+    padding:25px;
+    border-radius:25px;
+    box-shadow:0 15px 35px rgba(0,0,0,0.2);
+    text-align:center;
+    animation:fadeUp 1.5s ease;
+    position:relative;
+    z-index:10;
+}
+
+@keyframes fadeUp{
+    from{opacity:0; transform:translateY(40px);}
+    to{opacity:1; transform:translateY(0);}
+}
+
+.snoopy{
+    width:130px;
+    animation:bounce 2s infinite;
+}
+
+@keyframes bounce{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-12px);}
+}
+
+h1{
+    color:#ff6b6b;
+    margin:10px 0;
+}
+
+p{
+    color:#444;
+    margin:10px 0;
+    line-height:1.6;
+}
+
+button{
+    margin:10px 5px;
+    padding:12px 20px;
+    border:none;
+    border-radius:30px;
+    cursor:pointer;
+    font-size:15px;
+    transition:0.3s;
+}
+
+.btn1{ background:#ff6b6b; color:white; }
+.btn2{ background:#87CEEB; color:white; }
+
+button:hover{ transform:scale(1.08); }
+
+/* POEMA / CHISTE */
+.poema{
+    display:none;
+    margin-top:15px;
+    padding:15px;
+    background:#f8f8f8;
+    border-radius:15px;
+    animation:fadeIn 1s ease;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;}
+    to{opacity:1;}
+}
+
+/* CHISTE VISUAL */
+#chisteBox{
+    background:#fff3cd;
+    border:2px dashed #ff6b6b;
+    position:relative;
+    z-index:15;
+}
+
+/* BOTÓN NO */
+#noBtn{
+    position:relative;
+    z-index:5;
+}
+
+#respuesta, #contador{
+    margin-top:10px;
+    font-weight:bold;
+    color:#ff6b6b;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div class="login" id="loginBox">
+    <h3>🔐 Iniciar sesión</h3>
+    <input type="text" id="user" placeholder="Usuario">
+    <input type="password" id="pass" placeholder="Contraseña">
+    <button onclick="login()">Entrar</button>
+    <div id="error"></div>
+</div>
+
+<!-- CONTENIDO -->
+<div id="contenido">
+
+<div class="cloud cloud1"></div>
+<div class="cloud cloud2"></div>
+
+<div class="container">
+   
+
+    <h1>perdona mi pecado</h1>
+
+    <p id="texto"></p>
+
+    <button class="btn1" onclick="perdon(); sonido()">¿Me perdonas?</button>
+    <button onclick="mostrarPoema(); sonido()">Leer poema</button>
+    <button id="noBtn" class="btn2">No</button>
+    <button onclick="mostrarChiste(); sonido()">Chiste </button>
+
+    <!-- CHISTE ARRIBA (IMPORTANTE) -->
+    <div class="poema" id="chisteBox"></div>
+
+    <div class="poema" id="poema">
+       Sé que fallé en lo que dije, <br>
+y no quiero dejar pasar el tiempo en silencio, <br>
+porque hay palabras que pesan <br> 
+cuando se quedan por dentro. <br> 
+
+Hoy vengo a decirte “lo siento”, <br>
+sin rodeos ni pretextos, <br>
+solo con la intención sincera <br>
+de arreglar lo que quedó incompleto. <br>
+ 
+Si en algún momento puedes, <br> 
+y el corazón te da espacio, <br>
+me gustaría retomar la charla <br>
+con calma… y sin retraso <br>
+    </div>
+
+    <div id="respuesta"></div>
+    <div id="contador"></div>
+</div>
+
+</div>
+
+<audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3"></audio>
+
+<script>
+// LOGIN
+function login(){
+    let u = document.getElementById("user").value;
+    let p = document.getElementById("pass").value;
+
+    if(u === "romina" && p === "romina1234"){
+        document.getElementById("loginBox").style.display="none";
+        document.getElementById("contenido").style.display="block";
+        escribir();
+    }else{
+        document.getElementById("error").innerHTML="Datos incorrectos :( ";
+    }
+}
+
+// TEXTO
+const mensaje = "Sé que escribí mal el nombre de la serie... fue un error tonto, no falta de interés. Solo quería disculparme contigo.";
+let i = 0;
+
+function escribir(){
+    if(i < mensaje.length){
+        document.getElementById("texto").innerHTML += mensaje.charAt(i);
+        i++;
+        setTimeout(escribir, 40);
+    }
+}
+
+function mostrarPoema(){
+    document.getElementById("poema").style.display="block";
+}
+
+function sonido(){
+    document.getElementById("clickSound").play();
+}
+
+// CHISTES
+const chistes = [
+    "¿Qué hacen unos Converse en una habitación? Pues convers-ando.",
+    
+];
+
+function mostrarChiste(){
+    const random = Math.floor(Math.random() * chistes.length);
+    const box = document.getElementById("chisteBox");
+
+    box.style.display = "block";
+    box.innerHTML = chistes[random];
+}
+
+// PERDÓN
+let intentos = 0;
+function perdon(){
+    intentos++;
+
+    const texto = document.getElementById("texto");
+    texto.style.transition = "0.5s";
+    texto.style.opacity = "0";
+
+    setTimeout(() => {
+        texto.innerHTML = "";
+        texto.style.opacity = "1";
+    }, 500);
+
+    document.getElementById("respuesta").innerHTML="Thenkius :))";
+    document.body.style.background="linear-gradient(135deg,#ff9a9e,#fad0c4)";
+}
+
+// BOTÓN QUE HUYE
+const noBtn = document.getElementById("noBtn");
+
+noBtn.addEventListener("mouseover", () => {
+    const x = Math.random() * 200 - 100;
+    const y = Math.random() * 200 - 100;
+    noBtn.style.transform = `translate(${x}px, ${y}px)`;
+});
+
+// CORAZONES
+document.body.addEventListener("click", function(e){
+    let heart = document.createElement("div");
+    heart.innerHTML = ":)";
+    heart.style.position = "absolute";
+    heart.style.left = e.clientX + "px";
+    heart.style.top = e.clientY + "px";
+    heart.style.fontSize = "20px";
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 1000);
+});
+</script>
+
+</body>
+</html>
